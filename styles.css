@@ -283,3 +283,13 @@ _:-ms-input-placeholder,
   top: 0 !important;
   bottom: 0 !important;
 }
+
+.recordSection header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.recordSection header>*:first-child {
+  flex: 1;
+}
