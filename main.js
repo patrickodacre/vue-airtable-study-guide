@@ -4,23 +4,22 @@ new Vue({
     data: {
         name: '',
         note: '',
-        records: []
+        studyCards: []
     },
     computed: {
         memorizedCards() {
-            return this.records.filter((record) => {
-                return record.fields.Memorized
+            return this.studyCards.filter((card) => {
+                return card.fields.Memorized
             })
         },
         unMemorizedCards() {
-            return this.records.filter((record) => {
-                return !record.fields.Memorized
+            return this.studyCards.filter((card) => {
+                return !card.fields.Memorized
             })
         }
     },
     created,
     methods: {
-        viewDetails,
         saveCard,
         updateCardStatus,
         deleteCard
@@ -31,13 +30,13 @@ new Vue({
 /**
  * Step 1: Created Life Cycle Hook
  * 
- * Grab our current records on startup and save them to the 'records' array on our 'data' property.
+ * Grab our current studyCards on startup and save them to the 'studyCards' array on our 'data' property.
  */
 function created() {
     axios.get(`https://api.airtable.com/v0/appgyWdA8yP0KXZr4/My%20Study%20Cards?maxRecords=20&view=Main%20View&api_key=${airtableKey}`)
         .then((resp) => {
             console.log('response', resp)
-            this.records = resp.data.records
+            this.studyCards = resp.data.records
         })
 }
 
@@ -67,16 +66,16 @@ function saveCard() {
 
             if (resp.status === 200 && resp.data.id) {
 
-                // 2-4 If we're successful, update the records array
-                this.records.push(resp.data)
+                // 2-4 If we're successful, update the studyCards array
+                this.studyCards.push(resp.data)
 
                 // 2-5 clear the inputs.
                 this.name = ''
                 this.note = ''
 
                 // 2-6 Material Lite isn't reactive, so we're going to manually remove the css class so our label re-appear YUCK
-                document.getElementById('recordNameInput').classList.remove('is-dirty')
-                document.getElementById('recordNoteInput').classList.remove('is-dirty')
+                document.getElementById('studyCardNameInput').classList.remove('is-dirty')
+                document.getElementById('studyCardNoteInput').classList.remove('is-dirty')
             } else {
                 // handle the error - not something we're doing now.
                 console.error('Unable to save card.', payload)
@@ -87,30 +86,28 @@ function saveCard() {
 /**
  * Step 3: Update Card Status - Memorized is TRUE or FALSE
  * 
- * @param (object) record According to the API documentation, the entire record object is required for a put.
+ * @param (object) studyCard According to the API documentation, the entire studyCard object is required for a put.
  */
-function updateCardStatus(record) {
+function updateCardStatus(studyCard) {
 
     // 3-1 Create the payload object.
     const payload = {
-        fields: record.fields
+        fields: studyCard.fields
     }
 
-    // 3-2 PUT request to the db to update the record found at record.id
-    axios.put(`https://api.airtable.com/v0/appgyWdA8yP0KXZr4/My%20Study%20Cards/${record.id}?api_key=${airtableKey}`, payload)
+    // 3-2 PUT request to the db to update the studyCard found at studyCard.id
+    axios.put(`https://api.airtable.com/v0/appgyWdA8yP0KXZr4/My%20Study%20Cards/${studyCard.id}?api_key=${airtableKey}`, payload)
         .then((resp) => {
-
-            console.log('updated the record', resp)
 
             if (resp.status === 200 && resp.data.id) {
 
                 // 3-3 Find the updated card in our array and replace it.
-                this.records = this.records.map((record) => {
-                    if (resp.data.id === record.id) {
-                        record = resp.data
+                this.studyCards = this.studyCards.map((card) => {
+                    if (resp.data.id === card.id) {
+                        card = resp.data
                     }
 
-                    return record
+                    return card
                 })
             } else {
                 // handle the error - not something we're doing now.
@@ -122,28 +119,20 @@ function updateCardStatus(record) {
 
 /**
  * Step 4: Delete a Card
+ * 
+ * @param {number} studyCardID The .id for the card.
  */
-function deleteCard(recordID) {
+function deleteCard(studyCardID) {
 
-    // 4-1 Send the DELETE request for recordID
-    axios.delete(`https://api.airtable.com/v0/appgyWdA8yP0KXZr4/My%20Study%20Cards/${recordID}?api_key=${airtableKey}`)
+    // 4-1 Send the DELETE request for studyCardID
+    axios.delete(`https://api.airtable.com/v0/appgyWdA8yP0KXZr4/My%20Study%20Cards/${studyCardID}?api_key=${airtableKey}`)
         .then((resp) => {
 
-            // 4-2 If the delete is successful we'll filter the delete card from our records array.
+            // 4-2 If the delete is successful we'll filter the delete card from our studyCards array.
             if (resp.status === 200 && resp.data.deleted === true) {
-                this.records = this.records.filter((record) => {
-                    return record.id !== recordID
+                this.studyCards = this.studyCards.filter((card) => {
+                    return card.id !== studyCardID
                 })
             }
-        })
-}
-
-
-
-function viewDetails(recordID) {
-
-    axios.get(`https://api.airtable.com/v0/appgyWdA8yP0KXZr4/My%20Study%20Cards/${recordID}?api_key=${airtableKey}`)
-        .then((resp) => {
-            console.log('resp', resp)
         })
 }
