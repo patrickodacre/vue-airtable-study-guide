@@ -122,22 +122,25 @@
             <div class="mdl-grid demo-content">
                 <div id="createGuide" class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col">
 
-                    <section class="recordSection" v-for="record in unMemorized" :key="record.id">
-                        <header>
-                            <h3>{{record.fields.Name}}</h3>
-                            <div class="recordSection__complete">
-                                <label :for="record.fields.Name" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+                    <section class="cardSection" v-for="record in unMemorizedCards" :key="record.id">
+                        <div class="cardSection__complete">
+                            <label :for="record.id" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
                                     <input 
                                     type="checkbox" 
-                                    :id="record.fields.Name" 
+                                    :id="record.id" 
                                     class="mdl-checkbox__input"  v-model="record.fields.Memorized"
-                                    @change="setToMemorized(record)">
-                                    <span class="mdl-checkbox__label">Complete</span>
+                                    @change="updateCardStatus(record)">
+                                    <span class="mdl-checkbox__label"></span>
                                     </label>
-                            </div>
+                        </div>
+                        <div class="cardSection__content">
+                            <h3>{{record.fields.Name}}</h3>
 
-                        </header>
-                        <p>{{record.fields.Notes}}</p>
+                            <p>{{record.fields.Notes}}</p>
+                        </div>
+                        <div class="cardSection__delete">
+                            <button type="button" @click="deleteCard(record.id)">Delete</button>
+                        </div>
                     </section>
 
                 </div>
@@ -160,7 +163,7 @@
                             </div>
                         </div>
                         <div class="mdl-card__actions mdl-card--border">
-                            <a href="#" @click.prevent="save" class="mdl-button mdl-js-button mdl-js-ripple-effect">Save</a>
+                            <a href="#" @click.prevent="saveCard" class="mdl-button mdl-js-button mdl-js-ripple-effect">Save</a>
                         </div>
                         <!-- End create study guide form. -->
                     </div>
@@ -168,17 +171,17 @@
                     <div class="demo-options mdl-card mdl-color--deep-purple-500 mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--3-col-tablet mdl-cell--12-col-desktop">
 
 
-                        <!-- Iterate over list of unMemorized tasks. -->
+                        <!-- Iterate over list of Memorized Cards. -->
                         <div class="mdl-card__supporting-text mdl-color-text--blue-grey-50">
                             <h3>Completed Tasks:</h3>
                             <ul>
-                                <li v-for="record in memorizedRecords" :key="record.id">
-                                    <label :for="record.fields.Name" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+                                <li v-for="record in memorizedCards" :key="record.id">
+                                    <label :for="record.id" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
                                     <input 
                                     type="checkbox" 
-                                    :id="record.fields.Name" 
+                                    :id="record.id" 
                                     class="mdl-checkbox__input"  v-model="record.fields.Memorized"
-                                    @change="setToMemorized(record)">
+                                    @change="updateCardStatus(record)">
                                     <span class="mdl-checkbox__label">{{ record.fields.Name }}</span>
                                     </label>
                                 </li>

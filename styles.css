@@ -284,12 +284,28 @@ _:-ms-input-placeholder,
   bottom: 0 !important;
 }
 
-.recordSection header {
+.cardSection {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-start;
 }
 
-.recordSection header>*:first-child {
+.cardSection__complete,
+.cardSection__content {
+  margin-right: 2rem;
+}
+
+.cardSection__complete {
+  margin-top: 1rem;
+}
+
+.cardSection__delete {
+  margin-left: auto;
+}
+
+.cardSection__content h3 {
+  margin-top: 0;
+}
+
+.cardSection__content {
   flex: 1;
 }
