@@ -36,7 +36,11 @@ function created() {
     axios.get(`https://api.airtable.com/v0/appgyWdA8yP0KXZr4/My%20Study%20Cards?maxRecords=20&view=Main%20View&api_key=${airtableKey}`)
         .then((resp) => {
             console.log('response', resp)
-            this.studyCards = resp.data.records
+
+            // 1-1 If we retrieve records successfully, add the to our studyCards list.
+            if (resp.status === 200 && resp.data.records.length > 0) {
+                this.studyCards = resp.data.records
+            }
         })
 }
 
