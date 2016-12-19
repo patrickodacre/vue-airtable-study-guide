@@ -20,7 +20,7 @@ new Vue({
     },
     created,
     methods: {
-        saveCard,
+        saveStudyCard,
         updateCardStatus,
         deleteCard
 
@@ -40,6 +40,8 @@ function created() {
             // 1-1 If we retrieve records successfully, add the to our studyCards list.
             if (resp.status === 200 && resp.data.records.length > 0) {
                 this.studyCards = resp.data.records
+            } else {
+                console.error('Unable to retrieve study cards. Please refresh the page and try again.')
             }
         })
 }
@@ -47,7 +49,7 @@ function created() {
 /**
  * Step 2: Save a New Card to Airtable
  */
-function saveCard() {
+function saveStudyCard() {
 
     // 2-1 return early if either of the required fields are empty
     if (!this.name || !this.note) {
@@ -137,6 +139,9 @@ function deleteCard(studyCardID) {
                 this.studyCards = this.studyCards.filter((card) => {
                     return card.id !== studyCardID
                 })
+            } else {
+                // handle the error - not something we're doing now.
+                console.error('Unable to delete card.')
             }
         })
 }
