@@ -1,5 +1,7 @@
 # Using Vue with Airtable's Study Guide Template
 
+Project Walkthrough [here](http://patrickwho.me/tutorial/integrate-airtable-study-guide-template-with-vue-js/).
+
 This is just a simple project to help others get more familiar with using Vue and Airtable.
 
 Get some experience with the following:
